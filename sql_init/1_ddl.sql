@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `strapi`;
+SET GLOBAL binlog_format = 'ROW';

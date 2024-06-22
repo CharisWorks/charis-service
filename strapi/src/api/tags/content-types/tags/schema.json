@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tag_id",
+  "info": {
+    "singularName": "tags",
+    "pluralName": "tag-id",
+    "displayName": "tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "item_ids": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::item.item",
+      "mappedBy": "tags"
+    }
+  }
+}

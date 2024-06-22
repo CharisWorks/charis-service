@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "item_list",
+  "info": {
+    "singularName": "item",
+    "pluralName": "items",
+    "displayName": "item",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "item_name": {
+      "type": "string",
+      "required": true
+    },
+    "price": {
+      "type": "integer",
+      "required": true
+    },
+    "stock": {
+      "type": "integer",
+      "min": 0,
+      "required": true
+    },
+    "genre": {
+      "type": "enumeration",
+      "enum": ["bracelet"],
+      "required": true
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tags.tags",
+      "inversedBy": "item_ids"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "price_id": {
+      "type": "text",
+      "required": false
+    },
+    "pre_stock": {
+      "type": "integer"
+    },
+    "transactions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::transaction.transaction",
+      "mappedBy": "item"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "transactions",
+  "info": {
+    "singularName": "transaction",
+    "pluralName": "transactions",
+    "displayName": "Transaction",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "transaction_id": {
+      "type": "text",
+      "required": true
+    },
+    "item": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::item.item",
+      "inversedBy": "transactions"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "cancelled",
+        "shipping",
+        "completed",
+        "refunded"
+      ]
+    },
+    "tracking_id": {
+      "type": "string"
+    },
+    "transfer_id": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

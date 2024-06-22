@@ -65,6 +65,7 @@ services:
     environment:
       - STRIPE_API_KEY=${STRIPE_API_KEY}
       - STRIPE_SECRET_API_KEY=${STRIPE_SECRET_API_KEY}
+      - STRAPI_JWT=${STRAPI_JWT}
     volumes:
       - ./go:/gobackend
     ports:

@@ -20,7 +20,6 @@ services:
     volumes:
       - ./strapi/config:/app/config
       - ./strapi/src:/app/src
-      - ./strapi/.env:/opt/app/.env
       - ./strapi/public/uploads:/app/public/uploads
       - strapi-media:/app/public/uploads
     ports:
@@ -29,7 +28,17 @@ services:
       - strapi
     depends_on:
       - strapiDB
-
+  next:
+    container_name: frontend
+    build: ./next
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./next:/app/next
+    ports:
+      - "3000:3000"
+    networks:
+      - strapi
   strapiDB:
     container_name: strapiDB
     platform: linux/amd64 #for platform error on Apple M1 chips

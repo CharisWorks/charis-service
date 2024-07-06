@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # パッケージをコピー
-COPY package.json yarn.lock ./
+COPY package.json  ./
 
 # 依存関係をインストール
 RUN npm install

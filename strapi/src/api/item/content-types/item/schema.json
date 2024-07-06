@@ -27,26 +27,25 @@
     },
     "genre": {
       "type": "enumeration",
-      "enum": ["bracelet"],
+      "enum": [
+        "bracelet"
+      ],
       "required": true
     },
     "images": {
       "type": "media",
       "multiple": true,
       "required": true,
-      "allowedTypes": ["images"]
-    },
-    "tags": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::tags.tags",
-      "inversedBy": "item_ids"
+      "allowedTypes": [
+        "images"
+      ]
     },
     "description": {
-      "type": "richtext"
+      "type": "richtext",
+      "required": true
     },
     "price_id": {
-      "type": "text",
+      "type": "string",
       "required": false
     },
     "pre_stock": {
@@ -57,6 +56,19 @@
       "relation": "oneToMany",
       "target": "api::transaction.transaction",
       "mappedBy": "item"
+    },
+    "worker": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::worker.worker",
+      "inversedBy": "items"
+    },
+    "tag": {
+      "displayName": "tags",
+      "type": "component",
+      "repeatable": false,
+      "component": "tags.tags",
+      "required": true
     }
   }
 }

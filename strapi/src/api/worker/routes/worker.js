@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * tags router
+ * worker router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::tags.tags');
+module.exports = createCoreRouter('api::worker.worker');

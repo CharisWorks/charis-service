@@ -10,6 +10,7 @@ COPY package.json yarn.lock ./
 # 依存関係をインストール
 RUN npm install
 
+RUN npm install --save mysql
 # プロジェクトファイルをコピー
 COPY . .
 

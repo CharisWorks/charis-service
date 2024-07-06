@@ -362,6 +362,176 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiItemItem extends Schema.CollectionType {
+  collectionName: 'item_list';
+  info: {
+    singularName: 'item';
+    pluralName: 'items';
+    displayName: 'item';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    item_name: Attribute.String & Attribute.Required;
+    price: Attribute.Integer & Attribute.Required;
+    stock: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    genre: Attribute.Enumeration<['bracelet']> & Attribute.Required;
+    images: Attribute.Media<'images', true> & Attribute.Required;
+    description: Attribute.RichText;
+    price_id: Attribute.String;
+    pre_stock: Attribute.Integer;
+    transactions: Attribute.Relation<
+      'api::item.item',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    worker: Attribute.Relation<
+      'api::item.item',
+      'manyToOne',
+      'api::worker.worker'
+    >;
+    tag: Attribute.Component<'tags.tags'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::item.item', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::item.item', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTagsTags extends Schema.CollectionType {
+  collectionName: 'tag_id';
+  info: {
+    singularName: 'tags';
+    pluralName: 'tag-id';
+    displayName: 'tag';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    workers: Attribute.Relation<
+      'api::tags.tags',
+      'manyToMany',
+      'api::worker.worker'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::tags.tags', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::tags.tags', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTransactionTransaction extends Schema.CollectionType {
+  collectionName: 'transactions';
+  info: {
+    singularName: 'transaction';
+    pluralName: 'transactions';
+    displayName: 'Transaction';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    transaction_id: Attribute.String & Attribute.Required & Attribute.Unique;
+    item: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'api::item.item'
+    >;
+    status: Attribute.Enumeration<
+      ['pending', 'paid', 'cancelled', 'shipped', 'completed', 'refunded']
+    >;
+    tracking_id: Attribute.String;
+    quantity: Attribute.Integer;
+    transfer_id: Attribute.String;
+    name: Attribute.String;
+    email: Attribute.String;
+    city: Attribute.String;
+    postal_code: Attribute.String;
+    line1: Attribute.String;
+    line2: Attribute.String;
+    phone: Attribute.String;
+    state: Attribute.String;
+    payment_intent: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::transaction.transaction',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::transaction.transaction',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiWorkerWorker extends Schema.CollectionType {
+  collectionName: 'workers';
+  info: {
+    singularName: 'worker';
+    pluralName: 'workers';
+    displayName: 'worker';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    user_name: Attribute.String;
+    description: Attribute.String;
+    tags: Attribute.Relation<
+      'api::worker.worker',
+      'manyToMany',
+      'api::tags.tags'
+    >;
+    items: Attribute.Relation<
+      'api::worker.worker',
+      'oneToMany',
+      'api::item.item'
+    >;
+    stripe_account_id: Attribute.String;
+    email: Attribute.String & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::worker.worker',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::worker.worker',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -695,7 +865,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -798,6 +967,10 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::item.item': ApiItemItem;
+      'api::tags.tags': ApiTagsTags;
+      'api::transaction.transaction': ApiTransactionTransaction;
+      'api::worker.worker': ApiWorkerWorker;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;

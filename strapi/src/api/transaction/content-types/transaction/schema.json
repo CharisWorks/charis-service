@@ -8,13 +8,14 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "transaction_id": {
-      "type": "text",
-      "required": true
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "item": {
       "type": "relation",
@@ -26,8 +27,9 @@
       "type": "enumeration",
       "enum": [
         "pending",
+        "paid",
         "cancelled",
-        "shipping",
+        "shipped",
         "completed",
         "refunded"
       ]
@@ -35,9 +37,38 @@
     "tracking_id": {
       "type": "string"
     },
+    "quantity": {
+      "type": "integer"
+    },
     "transfer_id": {
-      "type": "string",
-      "required": true
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "postal_code": {
+      "type": "string"
+    },
+    "line1": {
+      "type": "string"
+    },
+    "line2": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "payment_intent": {
+      "type": "string"
     }
   }
 }

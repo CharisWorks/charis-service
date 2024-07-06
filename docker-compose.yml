@@ -18,12 +18,11 @@ services:
       APP_KEYS: ${APP_KEYS}
       NODE_ENV: ${NODE_ENV}
     volumes:
-      - ./strapi/config:/opt/app/config
-      - ./strapi/src:/opt/app/src
-      - ./strapi/package.json:/opt/package.json
-      - ./strapi/yarn.lock:/opt/yarn.lock
+      - ./strapi/config:/app/config
+      - ./strapi/src:/app/src
       - ./strapi/.env:/opt/app/.env
-      - ./strapi/public/uploads:/opt/app/public/uploads
+      - ./strapi/public/uploads:/app/public/uploads
+      - strapi-media:/app/public/uploads
     ports:
       - "1337:1337"
     networks:
@@ -43,9 +42,6 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
-    # volumes:
-    #   - strapi-data:/var/lib/mysql
-    #- ./data:/var/lib/mysql # if you want to use a bind folder
     ports:
       - "3306:3306"
     networks:
@@ -62,12 +58,11 @@ services:
     image: golang:1.22
     container_name: go
     working_dir: /gobackend
-    environment:
-      - STRIPE_API_KEY=${STRIPE_API_KEY}
-      - STRIPE_SECRET_API_KEY=${STRIPE_SECRET_API_KEY}
-      - STRAPI_JWT=${STRAPI_JWT}
+    env_file: .env
     volumes:
       - ./go:/gobackend
+      - ./strapi/public/uploads:/gobackend/uploads
+      - strapi-media:/gobackend/uploads
     ports:
       - "8080:8080"
     networks:
@@ -78,14 +73,48 @@ services:
     container_name: stripe
     environment:
       - STRIPE_API_KEY=${STRIPE_SECRET_API_KEY}
-    volumes:
-      - ./stripe:/stripe
     networks:
       - strapi
     command: listen --forward-to http://go:8080/webhooks/stripe
-volumes:
-  strapi-data:
 
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    user: root
+    ports:
+      - "3011:3000"
+    volumes:
+      - "./grafana_storage:/var/lib/grafana"
+    networks:
+      - strapi
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    user: root
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./prometheus-data:/prometheus"
+    networks:
+      - strapi
+  backup:
+    image: alpine
+    volumes:
+      - ./backups:/backups
+      - ./backup.sh:/opt/backup.sh
+    environment:
+      DATABASE_HOST: strapiDB
+      DATABASE_USER: ${DATABASE_USERNAME}
+      DATABASE_PASS: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+    entrypoint:
+      ["sh", "-c", "apk add --no-cache mysql-client && /opt/backup.sh"]
+    networks:
+      - strapi
+volumes:
+  strapi-media:
 networks:
   strapi:
     name: Strapi

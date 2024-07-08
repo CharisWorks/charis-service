@@ -1,0 +1,22 @@
+{
+  "id": "1",
+  "createdAt": "2024-07-06T22:56:35.855Z",
+  "description": "これはテスト",
+  "genre": "bracelet",
+  "images": [
+    {
+      "large_url": "https://image.charis.works/1/large_Rabbit_75338e0209",
+      "medium_url": "https://image.charis.works/1/medium_Rabbit_75338e0209",
+      "small_url": "https://image.charis.works/1/small_Rabbit_75338e0209"
+    }
+  ],
+  "item_name": "ピンクエピトード",
+  "price": 20000,
+  "publishedAt": "2024-07-06T22:56:36.770Z",
+  "stock": 36,
+  "tags": ["blue", "10cm"],
+  "thumbnail_url": "https://image.charis.works/1/thumbnail_Rabbit_75338e0209",
+  "updatedAt": "2024-07-08T09:16:04.582Z",
+  "worker": "whatacotton",
+  "worker_description": "わたなんだなあ"
+}

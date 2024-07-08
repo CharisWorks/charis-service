@@ -28,15 +28,14 @@ services:
       - strapi
     depends_on:
       - strapiDB
-  next:
-    container_name: frontend
-    build: ./next
-    restart: unless-stopped
-    env_file: .env
-    volumes:
-      - ./next:/app/next
+  nextjs:
+    build:
+      context: next
     ports:
-      - "3000:3000"
+      - 3000:3000
+    volumes:
+      - ./next:/next
+    command: npm run dev
     networks:
       - strapi
   strapiDB:

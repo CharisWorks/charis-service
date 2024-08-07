@@ -36,7 +36,6 @@ services:
       - 3000:3000
     volumes:
       - ./next:/next
-    command: npm run dev
     networks:
       - strapi
   strapiDB:
@@ -51,6 +50,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/sql_init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
@@ -84,7 +86,7 @@ services:
       - STRIPE_API_KEY=${STRIPE_SECRET_API_KEY}
     networks:
       - strapi
-    command: listen --forward-to http://go:8080/webhooks/stripe
+    # command: listen --forward-to http://go:8080/webhooks/stripe
 
   grafana:
     image: grafana/grafana-enterprise
@@ -119,9 +121,32 @@ services:
       DATABASE_PASS: ${DATABASE_PASSWORD}
       DATABASE_NAME: ${DATABASE_NAME}
     entrypoint:
-      ["sh", "-c", "apk add --no-cache mysql-client && /opt/backup.sh"]
+      [
+        "sh",
+        "-c",
+        "apk add --no-cache mysql-client && /opt/backup.sh"
+      ]
     networks:
       - strapi
+  mysqld-exporter:
+    image: quay.io/prometheus/mysqld-exporter
+    container_name: mysqld-exporter
+    restart: unless-stopped
+
+    # environment:
+    #   DATA_SOURCE_NAME: :@${MYSQL_EXPORTER_TARGET}
+    ports:
+      - 9104:9104
+    volumes:
+      # - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/sql_init:/docker-entrypoint-initdb.d
+    networks:
+      - strapi
+    command:
+      - "--mysqld.username=${MYSQL_EXPORTER_USER}:${MYSQL_EXPORTER_PASSWORD}"
+      - "--mysqld.address=strapiDB:3306"
+    depends_on:
+      - strapiDB
 volumes:
   strapi-media:
 networks:

@@ -5,7 +5,7 @@ backup() {
     TIMESTAMP=$(date +'%Y%m%d%H%M%S')
     FILENAME="/backups/${DATABASE_NAME}_${TIMESTAMP}.sql"
     echo "Starting backup: ${FILENAME}"
-    mysqldump -h ${DATABASE_HOST} -u ${DATABASE_USER} -p${DATABASE_PASS} ${DATABASE_NAME} > ${FILENAME}
+    mysqldump -q -h ${DATABASE_HOST} -u ${DATABASE_USER} -p${DATABASE_PASS} ${DATABASE_NAME} > ${FILENAME}
     echo "Backup completed: ${FILENAME}"
 }
 

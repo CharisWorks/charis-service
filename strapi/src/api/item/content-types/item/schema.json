@@ -28,7 +28,8 @@
     "genre": {
       "type": "enumeration",
       "enum": [
-        "bracelet"
+        "bracelet",
+        "neckless"
       ],
       "required": true
     },
